@@ -11,11 +11,17 @@ const directions = [
     [-1,-1],
 ];
 
+function getValidSurroundingCoords(grid: string[][], x: number, y: number ): number[][] {
+    const validCoord = (a: number, b: number) => a >= 0 && b >= 0 && a < grid[0].length && b < grid[0].length;
+
+    return directions
+        .map(([a,b]) => [a+x,b+y])
+        .filter(([a, b]) => validCoord(a, b));
+}
+
 
 function isRollAccessible(grid: string[][], x: number, y: number ): boolean {
-    const getCharAtCoords = (a: number, b: number) => a >= 0 && b >= 0 && a < grid[0].length && b < grid[0].length ? grid[a][b] : '.'
-
-    const nearbyRolls = directions.reduce((acc, cur) => acc + (getCharAtCoords(cur[0] + x, cur[1] + y) == '@' ? 1 : 0), 0);
+    const nearbyRolls = getValidSurroundingCoords(grid, x, y).reduce((acc, cur) => acc + (grid[cur[0]][cur[1]] == '@' ? 1 : 0), 0);
 
     return nearbyRolls < 4;
 }
